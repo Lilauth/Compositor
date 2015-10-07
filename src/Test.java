@@ -31,9 +31,9 @@ public class Test {
 			 frame.setLayout(new GridLayout(3, 3));
 			 JPanel panel = new JPanel();						 
 			 frame.add(panel);
-			// frame.pack();
+			//frame.pack();
 			 frame.setVisible(true);
-			 
+			
 		 }
 
 }
