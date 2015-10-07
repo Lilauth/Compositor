@@ -2,22 +2,19 @@ package compositor;
 import java.awt.BorderLayout;
 import java.awt.Button;
 import java.awt.Choice;
-import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Label;
 import java.awt.Panel;
+import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
-
 import compositor.enums.Notes;
 import compositor.enums.Durations;
 
 public class MainWindow {	
 	private Melody melody = new Melody();
 	private Frame frame;
-	private Label melodyLabel = 
-			new Label("..................................................................................................");
+	private Label melodyLabel = new Label(); 			
 	private Button closeButton;
 	private Button addSoundButton;
 	private Button removeSoundButton;
@@ -27,6 +24,7 @@ public class MainWindow {
 	private Panel visualizationPanel = new Panel();
 	private Choice notesChoice = new Choice();
 	private Choice durationsChoice = new Choice();
+	private TextField melodyTF = new TextField();
 	
 	public MainWindow() {
 		
@@ -49,6 +47,7 @@ public class MainWindow {
 					Durations.valueOf(durationsChoice.getSelectedItem())
 				);
 				melodyLabel.setText(melody.toString());
+				melodyTF.setText(melody.toString());
 			}
 		});
 		
@@ -58,6 +57,8 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				melody.removeLastSound();
 				melodyLabel.setText(melody.toString());
+				melodyTF.setText(melody.toString());
+				
 			}
 		});
 		
@@ -78,15 +79,16 @@ public class MainWindow {
 		});
 	}
 	
-	public void start() throws IOException, InterruptedException {
+	public void start() {
 		widgetsPanel.add(notesChoice);
 		widgetsPanel.add(durationsChoice);
 		widgetsPanel.add(addSoundButton);
 		widgetsPanel.add(removeSoundButton);
 		widgetsPanel.add(playButton);
 		
-		visualizationPanel.setLayout(new FlowLayout());
-		visualizationPanel.add(melodyLabel);
+		visualizationPanel.setLayout(new BorderLayout()); //(new FlowLayout());
+		visualizationPanel.add(melodyLabel, BorderLayout.NORTH);		
+		visualizationPanel.add(melodyTF, BorderLayout.SOUTH);
 
 		bottomPanel.add(closeButton, BorderLayout.CENTER);
 		
@@ -97,14 +99,9 @@ public class MainWindow {
 		frame.setSize(700, 200);
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) {
 		MainWindow myWindow = new MainWindow();
-		try {
-			myWindow.start();			
-		} 
-		catch (  Exception e) {
-			e.printStackTrace();
-		}
+		myWindow.start();			
 	}
 }
 
