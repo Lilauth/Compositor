@@ -28,18 +28,11 @@ class ImageTool extends JPanel {
 public class Test {		
 	
 		 public static void main(String[] args) throws MalformedURLException {
-			 ImageIcon image = new ImageIcon("images/clavesol.png");
-			 
+			 ImageIcon image = new ImageIcon("images/pentagram.png");			 
 			 JFrame frame = new JFrame();
 			 frame.setSize(100, 100);
-			 frame.setLayout(new GridLayout(3, 1));
-			 JPanel panel = new JPanel();
-			 JButton buttonSol = new JButton("-------------------------------------------");
-			 JButton buttonLa = new JButton("                                            ");
-			 JButton buttonSi = new JButton("-------------------------------------------");
-			 panel.add(buttonSol);
-			 panel.add(buttonLa);
-			 panel.add(buttonSi);
+			 frame.setLayout(new GridLayout(3, 3));
+			 JPanel panel = new JPanel();						 
 			 frame.add(panel);
 			// frame.pack();
 			 frame.setVisible(true);
