@@ -9,9 +9,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 class ImageTool extends JPanel {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public ImageTool(URL url) {
