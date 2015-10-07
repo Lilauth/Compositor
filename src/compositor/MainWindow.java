@@ -88,6 +88,7 @@ public class MainWindow {
 		
 		visualizationPanel.setLayout(new BorderLayout()); //(new FlowLayout());
 		visualizationPanel.add(melodyLabel, BorderLayout.NORTH);		
+		visualizationPanel.add(new Pentagram(notesChoice), BorderLayout.CENTER);
 		visualizationPanel.add(melodyTF, BorderLayout.SOUTH);
 
 		bottomPanel.add(closeButton, BorderLayout.CENTER);
@@ -96,7 +97,7 @@ public class MainWindow {
 		frame.add(visualizationPanel, BorderLayout.CENTER);
 		frame.add(bottomPanel, BorderLayout.SOUTH);
 		frame.setVisible(true);
-		frame.setSize(700, 200);
+		frame.setSize(850, 400);
 	}
 	
 	public static void main(String[] args) {
