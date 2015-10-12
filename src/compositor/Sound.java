@@ -15,4 +15,12 @@ public class Sound {
 	public String getSymbol(){
 		return nota.getSymbol() + duracion.getSymbol();
 	}
+	
+	public Notes getNote(){
+		return nota;
+	}
+	
+	public Durations getDuration(){
+		return duracion;
+	}
 }

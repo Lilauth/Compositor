@@ -1,108 +1,113 @@
 package compositor;
 import java.awt.BorderLayout;
 import java.awt.Button;
-import java.awt.Choice;
 import java.awt.Frame;
-import java.awt.Label;
 import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
+import org.jfugue.player.Player;
+
 import compositor.enums.Notes;
 import compositor.enums.Durations;
 
 public class MainWindow {	
-	private Melody melody = new Melody();
-	private Frame frame;
-	private Label melodyLabel = new Label(); 			
-	private Button closeButton;
-	private Button addSoundButton;
-	private Button removeSoundButton;
-	private Button playButton;
+	
+	private Frame frame = new Frame("Laboratorio de Software");
+	
+	private Panel topPanel = new Panel();
+	private Panel centerPanel = new Panel();
 	private Panel bottomPanel = new Panel();
-	private Panel widgetsPanel = new Panel();
-	private Panel visualizationPanel = new Panel();
-	private Choice notesChoice = new Choice();
-	private Choice durationsChoice = new Choice();
+	
+	private Panel buttonsPanel = new Panel();
+	private Panel durationsPanel = new Panel();
+
+	public Melody melody = new Melody();
+	private Button closeButton = new Button("Cerrar");
+	private Button removeSoundButton = new Button("Borrar");
+	private Button playButton = new Button("Sonar");
+	private Durations currentDuration = Durations.NEGRA;
+	private Pentagram pentagram = new Pentagram(this);
 	private TextField melodyTF = new TextField();
 	
-	public MainWindow() {
+	public void start() {
 		
-		frame = new Frame("Laboratorio de Software");
-		
-		for (final Notes n: Notes.values()){
-			notesChoice.add(n.name());
-		}
-		
-		for (final Durations n: Durations.values()){
-			durationsChoice.add(n.name());
-		}
-		
-		addSoundButton = new Button("Agregar Sonido");
-		addSoundButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				melody.addSound(
-					Notes.valueOf(notesChoice.getSelectedItem()),
-					Durations.valueOf(durationsChoice.getSelectedItem())
-				);
-				melodyLabel.setText(melody.toString());
-				melodyTF.setText(melody.toString());
-			}
-		});
-		
-		removeSoundButton = new Button("Borrar");
+		topPanel.setLayout(new BorderLayout());
 		removeSoundButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				melody.removeLastSound();
-				melodyLabel.setText(melody.toString());
 				melodyTF.setText(melody.toString());
-				
+				pentagram.repaint();
 			}
 		});
+		buttonsPanel.add(removeSoundButton);
 		
-		playButton = new Button("Sonar");
 		playButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				melody.play();
 			}
 		});
+		buttonsPanel.add(playButton);
 		
-		closeButton = new Button("Cerrar");
+		topPanel.add(buttonsPanel, BorderLayout.NORTH);
+		
 		closeButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				frame.dispose();
 			}
 		});
-	}
-	
-	public void start() {
-		widgetsPanel.add(notesChoice);
-		widgetsPanel.add(durationsChoice);
-		widgetsPanel.add(addSoundButton);
-		widgetsPanel.add(removeSoundButton);
-		widgetsPanel.add(playButton);
 		
-		visualizationPanel.setLayout(new BorderLayout()); //(new FlowLayout());
-		visualizationPanel.add(melodyLabel, BorderLayout.NORTH);		
-		visualizationPanel.add(new Pentagram(notesChoice), BorderLayout.CENTER);
-		visualizationPanel.add(melodyTF, BorderLayout.SOUTH);
+		
+		for (final Durations duration: Durations.values()){
+			JButton button = new JButton();
+			button.setIcon(new ImageIcon(getClass().getResource(duration.getImageFileName())));
+			button.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					currentDuration = duration;
+				}
+			});
+			durationsPanel.add(button);			
+		}
+		
+		
+		centerPanel.setLayout(new BorderLayout());
+		centerPanel.add(pentagram, BorderLayout.CENTER);
+		centerPanel.add(durationsPanel, BorderLayout.SOUTH);
 
+		bottomPanel.setLayout(new BorderLayout());
+		bottomPanel.add(melodyTF, BorderLayout.NORTH);
 		bottomPanel.add(closeButton, BorderLayout.CENTER);
 		
-		frame.add(widgetsPanel, BorderLayout.NORTH);
-		frame.add(visualizationPanel, BorderLayout.CENTER);
+		frame.add(topPanel, BorderLayout.NORTH);
+		frame.add(centerPanel, BorderLayout.CENTER);
 		frame.add(bottomPanel, BorderLayout.SOUTH);
 		frame.setVisible(true);
-		frame.setSize(850, 400);
+		frame.setSize(850, 215);
+	}
+	
+	public void noteChoosed(Notes note){
+		Sound sound = new Sound(
+			note,
+			currentDuration
+		);
+		melody.addSound(sound);
+		melodyTF.setText(melody.toString());
+		pentagram.repaint();
+		(new Player()).play(sound.getSymbol());
 	}
 	
 	public static void main(String[] args) {
 		MainWindow myWindow = new MainWindow();
-		myWindow.start();			
+		myWindow.start();
 	}
 }
 

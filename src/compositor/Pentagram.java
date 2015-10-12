@@ -2,79 +2,97 @@ package compositor;
 
 import java.awt.Choice;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
+import java.awt.Image;
+import java.util.EnumMap;
+import java.util.Map;
+
+import compositor.enums.Durations;
 import compositor.enums.Notes;
 
-public class Pentagram extends JPanel implements MouseListener{
+public class Pentagram extends JPanel implements MouseListener {
 	
+	private static Map<Notes, Integer> heightByNotes = new EnumMap<Notes, Integer>(Notes.class);
+	static {
+		heightByNotes.put(Notes.MI,55);
+		heightByNotes.put(Notes.FA,50);
+		heightByNotes.put(Notes.SOL,45);
+		heightByNotes.put(Notes.LA,40);
+		heightByNotes.put(Notes.SI,34);
+		heightByNotes.put(Notes.DO,31);
+		heightByNotes.put(Notes.RE,27);
+	
+	}
 	private static final long serialVersionUID = 1L;
-	public Image background;
-	private Choice notesChoice;
-	public Pentagram(Choice notesChoice) {
+	public Image background,
+				 gKey;
+	private MainWindow window;
+	public Pentagram(MainWindow window) {
 		super();
-		this.notesChoice = notesChoice;
-		this.setBackground();
+		this.background = getImage("images/pentagram.png");
+		this.gKey = getImage("images/clavesol.png");
+		this.window = window;
 		addMouseListener(this);
 	}
 	
-	public void paintComponent(Graphics g) {
- 
-        super.paintComponent(g);
-        if (this.background != null) {
-            g.drawImage(this.background, 10, 20, 800, 200, null);
-        }
-    }
-
-	public void setBackground() {
-        this.background = new ImageIcon(this.getClass().getResource("images/pentagram.png")).getImage();
-        repaint();
-    }
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		int y = e.getY();
-		Notes[] notes = Notes.values();
-		int min = 69;
-		int max = 173;
-		int spaceBetweenLines = (max - min) / 8;
-		int spaceBetweenNotes = spaceBetweenLines / 2;
-		for (int i = 0; i <= 10; i++){
-			int noteHeight = min + spaceBetweenLines * (i - 1);
-			Notes note = notes[(notes.length - i + 4) % notes.length];
-			if (Math.abs(y - noteHeight) <= spaceBetweenNotes){
-				notesChoice.select(note.name());
-				break;
+	private Image getImage(String src){
+		return new ImageIcon(getClass().getResource(src)).getImage();
+	}
+	
+	private static Notes inferNoteByPosition(int y){
+		Notes answer = null;
+		int minDist = Integer.MAX_VALUE;
+		for (Notes note : heightByNotes.keySet()) {
+			int dist = Math.abs(y - heightByNotes.get(note));
+			if (dist < minDist){
+				minDist = dist;
+				answer = note;
 			}
 		}
+		return answer;
+	}
+	
+	public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        g.drawImage(this.background, 10, 0, getWidth(), this.background.getHeight(this), null);
+        g.drawImage(this.gKey, 20, 13, 20, 50, null);
+        int i = 0;
+        for (Sound sound : window.melody.getSounds()){
+        	g.drawImage(getImage(sound.getDuration().getImageFileName()), 100 + i * 20, heightByNotes.get(sound.getNote()) - 25, 25, 33, null);
+        	i++;
+        }
+    }
+	
+	@Override
+	public void mousePressed(MouseEvent e) {
 	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		int y = e.getY();
+		Notes note = inferNoteByPosition(y);
+		if (note != null){
+			window.noteChoosed(note);		
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
 		
 	}
 

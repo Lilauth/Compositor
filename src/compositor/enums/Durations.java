@@ -20,7 +20,7 @@ public enum Durations {
 	}
 	
 	public String getImageFileName(){
-		return String.format("../images/%s.png", name().toLowerCase());
+		return String.format("images/%s.png", name().toLowerCase());
 	}
 	
 }
