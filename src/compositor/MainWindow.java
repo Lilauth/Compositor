@@ -45,7 +45,6 @@ public class MainWindow implements PentagramListener {
 			public void actionPerformed(ActionEvent e) {
 				melody.removeLastSound();
 				melodyTF.setText(melody.toString());
-				pentagram.removeLastSound();
 				pentagram.repaint();
 			}
 		});

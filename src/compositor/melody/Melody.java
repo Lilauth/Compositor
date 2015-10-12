@@ -8,9 +8,6 @@ import org.jfugue.player.Player;
 
 import compositor.Sound;
 import compositor.enums.*;
-import compositor.pentagram.PentagramEvent;
-import compositor.pentagram.PentagramEventMulticaster;
-import compositor.pentagram.PentagramListener;
 
 
 public class Melody {
@@ -80,7 +77,7 @@ public class Melody {
 			if (listener != null){
 				listener.lastSoundRemoved(new MelodyEvent(this, MelodyEvent.LAST_SOUND_REMOVED, sounds.get(sounds.size() - 1)));			
 			}
-			sounds.remove(sounds.size() - 1);			
+			sounds.remove(sounds.size() - 1);		
 		}
 	}
 	
