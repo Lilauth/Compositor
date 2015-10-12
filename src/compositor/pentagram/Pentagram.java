@@ -39,8 +39,8 @@ public class Pentagram extends JPanel implements MouseListener, MelodyListener {
 	private List<Sound> sounds = new ArrayList<Sound>();
 	public Pentagram(MainWindow window) {
 		super();
-		this.background = getImage("../images/pentagram.png");
-		this.gKey = getImage("../images/clavesol.png");
+		this.background = getImage("/compositor/images/pentagram.png");
+		this.gKey = getImage("/compositor/images/clavesol.png");
 		addMouseListener(this);
 	}
 	
@@ -68,7 +68,7 @@ public class Pentagram extends JPanel implements MouseListener, MelodyListener {
         int i = 0;
         for (Sound sound : sounds){
         	g.drawImage(
-    			getImage("../" + sound.getDuration().getImageFileName()),
+    			getImage("/compositor/"+sound.getDuration().getImageFileName()),
     			100 + i * 20,
     			heightByNotes.get(sound.getNote()) - 25,
     			25,
