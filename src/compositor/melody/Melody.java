@@ -1,4 +1,6 @@
 package compositor.melody;
+import java.awt.event.TextEvent;
+import java.awt.event.TextListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,8 +34,8 @@ public class Melody {
 		List<Sound> sounds = new ArrayList<Sound>();
 		for (String soundStr: str.split(" ")){
 			sounds.add(new Sound(
-				noteBySymbol.get(soundStr.substring(0, 0)),
-				durationBySymbol.get(soundStr.substring(1, 1))
+				noteBySymbol.get(soundStr.substring(0, 1)),
+				durationBySymbol.get(soundStr.substring(1, 2))
 			));
 		}
 		return sounds;
@@ -84,4 +86,14 @@ public class Melody {
 	public synchronized void addListener(MelodyListener listener){
 		this.listener = MelodyEventMulticaster.add(this.listener, listener);
 	}
+
+	public void updateFromString(String str) {
+		while (!sounds.isEmpty()){
+			removeLastSound();
+		}
+		for (Sound sound: parse(str)){
+			addSound(sound);
+		}
+	}
+
 }

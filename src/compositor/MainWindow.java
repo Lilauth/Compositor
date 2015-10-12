@@ -31,6 +31,7 @@ public class MainWindow implements PentagramListener {
 
 	public Melody melody = new Melody();
 	private Button closeButton = new Button("Cerrar");
+	private Button updateButton = new Button("Actualizar");
 	private Button removeSoundButton = new Button("Borrar");
 	private Button playButton = new Button("Escuchar");
 	private Duration currentDuration = Duration.NEGRA;
@@ -67,6 +68,13 @@ public class MainWindow implements PentagramListener {
 			}
 		});
 		
+		updateButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				melody.updateFromString(melodyTF.getText());
+			}
+		});
 		
 		for (final Duration duration: Duration.values()){
 			JButton button = new JButton();
@@ -83,6 +91,7 @@ public class MainWindow implements PentagramListener {
 		
 		pentagram.addListener(this);
 		melody.addListener(pentagram);
+	
 		
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(pentagram, BorderLayout.CENTER);
@@ -90,7 +99,8 @@ public class MainWindow implements PentagramListener {
 
 		bottomPanel.setLayout(new BorderLayout());
 		bottomPanel.add(melodyTF, BorderLayout.NORTH);
-		bottomPanel.add(closeButton, BorderLayout.CENTER);
+		bottomPanel.add(updateButton, BorderLayout.CENTER);
+		bottomPanel.add(closeButton, BorderLayout.SOUTH);
 		
 		frame.add(topPanel, BorderLayout.NORTH);
 		frame.add(centerPanel, BorderLayout.CENTER);
