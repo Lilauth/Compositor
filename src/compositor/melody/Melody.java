@@ -1,4 +1,4 @@
-package compositor;
+package compositor.melody;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -6,24 +6,29 @@ import java.util.Map;
 
 import org.jfugue.player.Player;
 
+import compositor.Sound;
 import compositor.enums.*;
+import compositor.pentagram.PentagramEvent;
+import compositor.pentagram.PentagramEventMulticaster;
+import compositor.pentagram.PentagramListener;
 
 
 public class Melody {
 	
-	private static Map<String, Notes> noteBySymbol = new HashMap<String, Notes>();
+	private static Map<String, Note> noteBySymbol = new HashMap<String, Note>();
 	static {
-		for (Notes note: Notes.values()){
+		for (Note note: Note.values()){
 			noteBySymbol.put(note.getSymbol(), note);
 		}
 	}
-	private static Map<String, Durations> durationBySymbol = new HashMap<String, Durations>();
+	private static Map<String, Duration> durationBySymbol = new HashMap<String, Duration>();
 	static {
-		for (Durations duration: Durations.values()){
+		for (Duration duration: Duration.values()){
 			durationBySymbol.put(duration.getSymbol(), duration);
 		}
 	}
 	private List<Sound> sounds = new ArrayList<Sound>();
+	private MelodyListener listener;
 
 	
 	public static List<Sound> parse(String str){
@@ -48,9 +53,12 @@ public class Melody {
 	
 	public void addSound(Sound sound){
 		sounds.add(sound);
+		if (listener != null){
+			listener.soundAdded(new MelodyEvent(this, MelodyEvent.SOUND_ADDED, sound));			
+		}
 	}
 	
-	public void addSound(Notes note, Durations duration){
+	public void addSound(Note note, Duration duration){
 		addSound(new Sound(note, duration));
 	}
 	
@@ -67,13 +75,16 @@ public class Melody {
 		return String.join(" ", symbols);
 	}
 	
-	public List<Sound> getSounds(){
-		return sounds;
-	}
-
 	public void removeLastSound() {
 		if (!sounds.isEmpty()){
+			if (listener != null){
+				listener.lastSoundRemoved(new MelodyEvent(this, MelodyEvent.LAST_SOUND_REMOVED, sounds.get(sounds.size() - 1)));			
+			}
 			sounds.remove(sounds.size() - 1);			
 		}
+	}
+	
+	public synchronized void addListener(MelodyListener listener){
+		this.listener = MelodyEventMulticaster.add(this.listener, listener);
 	}
 }

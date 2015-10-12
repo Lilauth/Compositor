@@ -1,26 +1,26 @@
 package compositor;
-import compositor.enums.Durations;
-import compositor.enums.Notes;
+import compositor.enums.Duration;
+import compositor.enums.Note;
 
 
 public class Sound {
-	public Sound(Notes nota, Durations duracion) {
+	public Sound(Note nota, Duration duracion) {
 		super();
 		this.nota = nota;
 		this.duracion = duracion;
 	}
-	private Notes nota;
-	private Durations duracion;
+	private Note nota;
+	private Duration duracion;
 	
 	public String getSymbol(){
 		return nota.getSymbol() + duracion.getSymbol();
 	}
 	
-	public Notes getNote(){
+	public Note getNote(){
 		return nota;
 	}
 	
-	public Durations getDuration(){
+	public Duration getDuration(){
 		return duracion;
 	}
 }

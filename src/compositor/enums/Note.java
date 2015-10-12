@@ -1,7 +1,7 @@
 package compositor.enums;
 
 
-public enum Notes {
+public enum Note {
 	DO("C"),
 	RE("D"),
 	MI("E"),
@@ -12,7 +12,7 @@ public enum Notes {
 	
 	private String symbol;
 	
-	Notes(String symbol){
+	Note(String symbol){
 		this.symbol = symbol;
 	}
 

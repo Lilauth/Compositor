@@ -1,6 +1,6 @@
 package compositor.enums;
 
-public enum Durations {
+public enum Duration {
 	REDONDA("w"),
 	BLANCA("h"),
 	NEGRA("q"),
@@ -11,7 +11,7 @@ public enum Durations {
 	
 	private String symbol;
 	
-	Durations(String symbol){
+	Duration(String symbol){
 		this.symbol = symbol;
 	}
 

@@ -12,10 +12,13 @@ import javax.swing.JButton;
 
 import org.jfugue.player.Player;
 
-import compositor.enums.Notes;
-import compositor.enums.Durations;
+import compositor.enums.Duration;
+import compositor.melody.Melody;
+import compositor.pentagram.Pentagram;
+import compositor.pentagram.PentagramEvent;
+import compositor.pentagram.PentagramListener;
 
-public class MainWindow {	
+public class MainWindow implements PentagramListener {	
 	
 	private Frame frame = new Frame("Laboratorio de Software");
 	
@@ -29,8 +32,8 @@ public class MainWindow {
 	public Melody melody = new Melody();
 	private Button closeButton = new Button("Cerrar");
 	private Button removeSoundButton = new Button("Borrar");
-	private Button playButton = new Button("Sonar");
-	private Durations currentDuration = Durations.NEGRA;
+	private Button playButton = new Button("Escuchar");
+	private Duration currentDuration = Duration.NEGRA;
 	private Pentagram pentagram = new Pentagram(this);
 	private TextField melodyTF = new TextField();
 	
@@ -42,6 +45,7 @@ public class MainWindow {
 			public void actionPerformed(ActionEvent e) {
 				melody.removeLastSound();
 				melodyTF.setText(melody.toString());
+				pentagram.removeLastSound();
 				pentagram.repaint();
 			}
 		});
@@ -65,7 +69,7 @@ public class MainWindow {
 		});
 		
 		
-		for (final Durations duration: Durations.values()){
+		for (final Duration duration: Duration.values()){
 			JButton button = new JButton();
 			button.setIcon(new ImageIcon(getClass().getResource(duration.getImageFileName())));
 			button.addActionListener(new ActionListener() {
@@ -78,6 +82,8 @@ public class MainWindow {
 			durationsPanel.add(button);			
 		}
 		
+		pentagram.addListener(this);
+		melody.addListener(pentagram);
 		
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(pentagram, BorderLayout.CENTER);
@@ -91,23 +97,21 @@ public class MainWindow {
 		frame.add(centerPanel, BorderLayout.CENTER);
 		frame.add(bottomPanel, BorderLayout.SOUTH);
 		frame.setVisible(true);
-		frame.setSize(850, 215);
-	}
-	
-	public void noteChoosed(Notes note){
-		Sound sound = new Sound(
-			note,
-			currentDuration
-		);
-		melody.addSound(sound);
-		melodyTF.setText(melody.toString());
-		pentagram.repaint();
-		(new Player()).play(sound.getSymbol());
+		frame.setSize(850, 220);
 	}
 	
 	public static void main(String[] args) {
 		MainWindow myWindow = new MainWindow();
 		myWindow.start();
+	}
+
+	@Override
+	public void noteSelected(PentagramEvent e) {
+		Sound sound = new Sound(e.getNote(), currentDuration);
+		melody.addSound(sound);
+		melodyTF.setText(melody.toString());
+		(new Player()).play(sound.getSymbol());
+		
 	}
 }
 
