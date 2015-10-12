@@ -1,6 +1,4 @@
 package compositor.melody;
-import java.awt.event.TextEvent;
-import java.awt.event.TextListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
